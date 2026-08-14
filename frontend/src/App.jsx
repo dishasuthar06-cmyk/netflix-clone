@@ -150,6 +150,7 @@ function Toast({ msg }) {
 
 function MovieCard({ m, inList, onAdd, onOpen, progress }) {
   const [hover, setHover] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const [c1, c2] = m.grad || ["#1E1B22", "#3A0A0A"];
   return (
     <div
@@ -166,15 +167,27 @@ function MovieCard({ m, inList, onAdd, onOpen, progress }) {
         background: `linear-gradient(135deg, ${c1}, ${c2})`,
       }}
     >
-      {m.posterUrl ? (
-        <img src={m.posterUrl} alt={m.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      {m.posterUrl && !imgError ? (
+        <img 
+          src={m.posterUrl} 
+          alt={m.title} 
+          onError={() => setImgError(true)} 
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+        />
       ) : (
         <div style={{ padding: 14, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", boxSizing: "border-box" }}>
           <div>
-            <span style={{ fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: T.amber }}>{m.type === "tv" ? "TV Series" : "Movie"}</span>
-            <div style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 700, color: "#fff", marginTop: 4 }}>{m.title}</div>
+            <span style={{ fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: T.amber, fontWeight: 700 }}>
+              {m.type === "tv" ? "TV Series" : "Movie"}
+            </span>
+            <div style={{ fontFamily: "Georgia, serif", fontSize: 17, fontWeight: 700, color: "#fff", marginTop: 6, lineHeight: 1.25 }}>
+              {m.title}
+            </div>
           </div>
-          <div style={{ fontSize: 11, color: T.mute }}>{m.genres?.join(" · ")}</div>
+          <div>
+            <div style={{ fontSize: 11, color: T.amber, marginBottom: 4, fontWeight: 700 }}>★ {m.rating}</div>
+            <div style={{ fontSize: 11, color: T.mute }}>{m.genres?.join(" · ")}</div>
+          </div>
         </div>
       )}
 
@@ -477,6 +490,7 @@ function Hero({ movies = [], onPlay, onInfo }) {
 }
 
 function Details({ movie, myList, onAdd, onBack, onPlay, allMovies }) {
+  const [detailImgErr, setDetailImgErr] = useState(false);
   if (!movie) return null;
   const [c1, c2] = movie.grad || ["#0A0A0D", "#3A0A0A"];
   const similar = allMovies.filter((m) => m.id !== movie.id && m.genres?.some((g) => movie.genres?.includes(g))).slice(0, 6);
@@ -487,8 +501,15 @@ function Details({ movie, myList, onAdd, onBack, onPlay, allMovies }) {
         <button onClick={onBack} aria-label="Back" style={{ position: "absolute", top: 20, left: 24, background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: 36, height: 36, color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><ArrowLeft size={18} /></button>
       </div>
       <div style={{ padding: "0 44px", marginTop: -90, position: "relative", display: "flex", gap: 26 }}>
-        <div style={{ width: 170, flexShrink: 0, height: 250, borderRadius: 8, overflow: "hidden", background: T.surface2 }}>
-          {movie.posterUrl ? <img src={movie.posterUrl} alt={movie.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null}
+        <div style={{ width: 170, flexShrink: 0, height: 250, borderRadius: 8, overflow: "hidden", background: `linear-gradient(135deg, ${c1}, ${c2})`, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${T.line}` }}>
+          {movie.posterUrl && !detailImgErr ? (
+            <img src={movie.posterUrl} alt={movie.title} onError={() => setDetailImgErr(true)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ) : (
+            <div style={{ padding: 14, textAlign: "center" }}>
+              <div style={{ fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: T.amber, fontWeight: 700 }}>{movie.type === "tv" ? "TV Series" : "Movie"}</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 700, color: "#fff", marginTop: 6 }}>{movie.title}</div>
+            </div>
+          )}
         </div>
         <div style={{ paddingTop: 90 }}>
           <h1 style={{ fontFamily: "Georgia, serif", fontSize: 34, margin: 0 }}>{movie.title}</h1>
