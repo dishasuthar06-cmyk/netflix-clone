@@ -45,9 +45,11 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Netflix-Clone running on http://localhost:${PORT}`);
-  console.log(`📡 Unified Frontend & API available at http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Netflix-Clone running on http://localhost:${PORT}`);
+    console.log(`📡 Unified Frontend & API available at http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;

@@ -6,7 +6,11 @@ import {
   Baby, ArrowLeft, Clock, ListVideo
 } from "lucide-react";
 
-const API_BASE = typeof window !== "undefined" && window.location.origin ? (window.location.port === "5000" ? "/api" : "http://localhost:5000/api") : "http://localhost:5000/api";
+const API_BASE = typeof window !== "undefined" && window.location.origin
+  ? (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
+      ? "/api"
+      : (window.location.port === "5000" ? "/api" : "http://localhost:5000/api"))
+  : "/api";
 
 /* ---------------- design tokens ---------------- */
 const T = {
@@ -1131,7 +1135,7 @@ export default function App() {
         fontSize: 11, padding: "4px 12px", textAlign: "center", display: "flex", justifyContent: "center", gap: 8, alignItems: "center"
       }}>
         <span style={{ width: 8, height: 8, borderRadius: "50%", background: connected ? T.teal : T.red }} />
-        <span>{connected ? "Backend Connected (http://localhost:5000/api)" : "Backend Offline — Retrying connection..."}</span>
+        <span>{connected ? `Backend Connected (${API_BASE})` : "Backend Offline — Retrying connection..."}</span>
       </div>
 
       {view !== "login" && view !== "signup" && (

@@ -9,9 +9,11 @@ if (process.env.USE_SQLITE === "true") {
   console.log("ℹ️ USE_SQLITE=true: Using SQLite database.");
   activeDb = sqliteDb;
 } else {
+  const isLocalDb = !process.env.DATABASE_URL || process.env.DATABASE_URL.includes("localhost") || process.env.DATABASE_URL.includes("127.0.0.1");
   const pgPool = new Pool({
     connectionString: process.env.DATABASE_URL || "postgresql://postgres:password@localhost:5432/netflix_clone",
-    connectionTimeoutMillis: 1500,
+    connectionTimeoutMillis: 3000,
+    ssl: isLocalDb ? false : { rejectUnauthorized: false },
   });
 
   // Proxy pool methods to support smooth fallback

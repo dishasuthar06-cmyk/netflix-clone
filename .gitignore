@@ -16,5 +16,6 @@ yarn-error.log*
 
 # Environment & IDE
 .env
+.vercel/
 .vscode/
 .DS_Store
