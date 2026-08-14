@@ -1,0 +1,16 @@
+{
+  "name": "netflix-clone-workspace",
+  "version": "1.0.0",
+  "description": "Unified Netflix Clone Web Application (Frontend + Backend)",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "start": "npm run build --prefix frontend && node backend/src/server.js",
+    "server": "node backend/src/server.js",
+    "seed": "node backend/src/db/seed.js",
+    "build": "npm run build --prefix frontend",
+    "dev": "npm start"
+  },
+  "keywords": ["netflix", "clone", "react", "express", "sqlite"],
+  "author": "",
+  "license": "ISC"
+}
